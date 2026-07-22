@@ -1,0 +1,92 @@
+name: Process POS Order
+
+on:
+  repository_dispatch:
+    types: [pos_order]
+
+jobs:
+  process-order:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Create order payload file
+      run: |
+        echo '${{ github.event.client_payload.order }}' > order.json
+
+    - name: Install jq
+      run: sudo apt-get install jq -y
+
+    - name: Load JSON files
+      run: |
+        cp stock.json stock_work.json
+        cp regulars.json regulars_work.json
+        cp sales.json sales_work.json
+
+    - name: Process order
+      run: |
+        ORDER=$(cat order.json)
+
+        # Extract fields
+        CUSTOMER=$(echo "$ORDER" | jq -r '.customer')
+        TOTAL=$(echo "$ORDER" | jq -r '.total')
+        PAYMENT=$(echo "$ORDER" | jq -r '.paymentMethod')
+        ISREG=$(echo "$ORDER" | jq -r '.isRegular')
+
+        # Update stock
+        ITEMS=$(echo "$ORDER" | jq -c '.items[]')
+        for ITEM in $ITEMS; do
+          NAME=$(echo "$ITEM" | jq -r '.item')
+          QTY=$(echo "$ITEM" | jq -r '.qty')
+
+          jq --arg name "$NAME" --argjson qty "$QTY" '
+            map(if .item == $name then .stock = (.stock - $qty) else . end)
+          ' stock_work.json > tmp.json && mv tmp.json stock_work.json
+        done
+
+        # Update regular balance
+        if [ "$ISREG" = "true" ]; then
+          REGNAME=$(echo "$ORDER" | jq -r '.regularData.name')
+          AUTOPAY=$(echo "$ORDER" | jq -r '.regularData.auto_payment')
+
+          if [ "$AUTOPAY" = "credit" ]; then
+            jq --arg name "$REGNAME" --argjson total "$TOTAL" '
+              map(if .name == $name then .balance = (.balance - $total) else . end)
+            ' regulars_work.json > tmp.json && mv tmp.json regulars_work.json
+          fi
+
+          if [ "$AUTOPAY" = "debit" ]; then
+            jq --arg name "$REGNAME" --argjson total "$TOTAL" '
+              map(if .name == $name then .balance = (.balance + $total) else . end)
+            ' regulars_work.json > tmp.json && mv tmp.json regulars_work.json
+          fi
+        fi
+
+        # Append to sales log
+        jq --argjson order "$ORDER" '. += [$order]' sales_work.json > tmp.json && mv tmp.json sales_work.json
+
+    - name: Commit changes
+      run: |
+        git config user.name "OpenAllHours POS"
+        git config user.email "pos@openallhours.local"
+
+        git add stock_work.json regulars_work.json sales_work.json
+        git commit -m "POS update: processed order"
+        git push
+
+    - name: Send Discord Notification
+      run: |
+        CUSTOMER=$(jq -r '.customer' order.json)
+        TOTAL=$(jq -r '.total' order.json)
+        PAYMENT=$(jq -r '.paymentMethod' order.json)
+
+        curl -H "Content-Type: application/json" \
+          -d "{\"content\": \"🛒 **New Order Processed**\nCustomer: ${CUSTOMER}\nTotal: £${TOTAL}\nPayment: ${PAYMENT}\"}" \
+          ${{ secrets.DISCORD_WEBHOOK }}
