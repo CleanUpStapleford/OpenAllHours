@@ -1,4 +1,5 @@
 name: POS Dispatch Relay
+# activate workflow
 
 on:
   repository_dispatch:
