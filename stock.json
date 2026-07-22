@@ -1,0 +1,42 @@
+[
+  {
+    "sku": "DRK-001",
+    "item": "Pepsi Max",
+    "category": "Drinks",
+    "price": 0.70,
+    "cost": 0.33,
+    "stock": 7
+  },
+  {
+    "sku": "DRK-002",
+    "item": "Dr Pepper",
+    "category": "Drinks",
+    "price": 0.70,
+    "cost": 0.33,
+    "stock": 17
+  },
+  {
+    "sku": "DRK-003",
+    "item": "Coca-Cola",
+    "category": "Drinks",
+    "price": 1.10,
+    "cost": 0.55,
+    "stock": 12
+  },
+  {
+    "sku": "SNK-001",
+    "item": "Twirl",
+    "category": "Snacks",
+    "price": 0.60,
+    "cost": 0.28,
+    "stock": 11
+  },
+  {
+    "sku": "FD-001",
+    "item": "Pot Noodle (Chicken & Mushroom)",
+    "category": "Food",
+    "price": 1.00,
+    "cost": 0.55,
+    "stock": 9
+  }
+]
