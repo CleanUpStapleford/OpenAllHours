@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Paul",
+        "auto_payment": "credit",
+        "balance": -4.20,
+        "notes": "Pays every Friday",
+        "discord": "",
+        "email": "",
+        "trusted": true
+    },
+    {
+        "name": "Beth",
+        "auto_payment": "debit",
+        "balance": 1.20,
+        "notes": "Overpaid last week",
+        "discord": "",
+        "email": "",
+        "trusted": true
+    },
+    {
+        "name": "Geoff",
+        "auto_payment": "credit",
+        "balance": -0.50,
+        "notes": "Buys Pepsi Max daily",
+        "discord": "",
+        "email": "",
+        "trusted": true
+    },
+    {
+        "name": "Charlie",
+        "auto_payment": "credit",
+        "balance": 0.00,
+        "notes": "New regular",
+        "discord": "",
+        "email": "",
+        "trusted": false
+    }
+]
