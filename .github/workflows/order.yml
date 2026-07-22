@@ -1,4 +1,5 @@
 name: Process POS Order
+# activate workflow
 
 on:
   repository_dispatch:
