@@ -1,9 +1,9 @@
-// -------------------------------
+// -----------------------------------------------
 // Open All Hours POS — order.js
-// -------------------------------
-// Loads stock + regulars, builds orders, updates summary,
-// and prepares payload for GitHub Actions.
-// -------------------------------
+// -----------------------------------------------
+// Loads stock + regulars, builds orders, updates
+// summary, and sends orders to GitHub Actions.
+// -----------------------------------------------
 
 // Load JSON files
 async function loadJSON(path) {
@@ -81,7 +81,7 @@ function buildOrder() {
 
     const customerName = document.getElementById("customerName").value.trim();
     const isRegular = document.getElementById("isRegular").checked;
-    const paymentMethod = getPaymentMethod();
+    let paymentMethod = getPaymentMethod();
 
     let regularData = null;
     if (isRegular && customerName) {
@@ -127,38 +127,11 @@ function updateSummary() {
 }
 
 // --------------------------------------
-// Complete order (for now: show JSON)
-// Later: send to GitHub Actions
-// --------------------------------------
-function completeOrder() {
-    const order = buildOrder();
-    updateSummary();
-
-    const log = document.getElementById("orderLog");
-    log.textContent = JSON.stringify(order, null, 2);
-
-    // -------------------------------
-    // Later:
-    // - POST order to GitHub Action
-    // - Update stock.json
-    // - Update regulars.json
-    // - Append to sales.json
-    // - Trigger Discord webhook
-    // -------------------------------
-}
-
-// --------------------------------------
-// Event listeners
-// --------------------------------------
-document.getElementById("updateSummaryBtn").addEventListener("click", updateSummary);
-document.getElementById("completeOrderBtn").addEventListener("click", completeOrder);
-
-// --------------------------------------
 // SEND ORDER TO GITHUB ACTION
 // --------------------------------------
 async function sendOrderToGitHub(order) {
-    const repoOwner = "CleanUpStapleford";
-    const repoName = "OpenAllHours";
+    const repoOwner = "YOUR_GITHUB_USERNAME";   // CHANGE THIS
+    const repoName = "YOUR_REPO_NAME";          // CHANGE THIS
 
     const url = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
 
@@ -173,7 +146,6 @@ async function sendOrderToGitHub(order) {
         method: "POST",
         headers: {
             "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer ${POS_TOKEN}",
             "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
@@ -181,3 +153,28 @@ async function sendOrderToGitHub(order) {
 
     return response.ok;
 }
+
+// --------------------------------------
+// Complete order
+// --------------------------------------
+async function completeOrder() {
+    const order = buildOrder();
+    updateSummary();
+
+    const log = document.getElementById("orderLog");
+    log.textContent = "Sending order to GitHub…";
+
+    const ok = await sendOrderToGitHub(order);
+
+    if (ok) {
+        log.textContent = "Order sent successfully! GitHub Action is processing it.";
+    } else {
+        log.textContent = "Failed to send order. Check repo name or GitHub settings.";
+    }
+}
+
+// --------------------------------------
+// Event listeners
+// --------------------------------------
+document.getElementById("updateSummaryBtn").addEventListener("click", updateSummary);
+document.getElementById("completeOrderBtn").addEventListener("click", completeOrder);
