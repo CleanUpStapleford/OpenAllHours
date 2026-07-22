@@ -105,6 +105,20 @@
         color: #7a4a12;
         font-weight: bold;
     }
+
+    #hideStaffBtn {
+        display: none;
+        background: #d9534f;
+        color: #fff;
+        border: 2px solid #7a4a12;
+        padding: 0.7rem;
+        margin-top: 1rem;
+        text-align: center;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+    }
 </style>
 </head>
 
@@ -142,12 +156,14 @@
             <a class="link-btn" href="sales.json">Sales Log</a>
             <a class="link-btn" href="stock.json">Stock File</a>
         </div>
+
+        <button id="hideStaffBtn" onclick="hideStaff()">Hide Staff Tools</button>
     </div>
 
 </main>
 
 <script>
-    const STAFF_PASSCODE = "openallhours2024"; // CHANGE THIS ANYTIME
+    const STAFF_PASSCODE = "openallhours5010"; // CHANGE THIS ANYTIME
 
     function unlock() {
         const input = document.getElementById("passcodeInput").value.trim();
@@ -155,10 +171,17 @@
 
         if (input === STAFF_PASSCODE) {
             document.getElementById("privateLinks").style.display = "block";
-            msg.textContent = "Unlocked — Staff tools available.";
+            document.getElementById("hideStaffBtn").style.display = "block";
+            msg.textContent = "Staff mode unlocked.";
         } else {
             msg.textContent = "Incorrect passcode.";
         }
+    }
+
+    function hideStaff() {
+        document.getElementById("privateLinks").style.display = "none";
+        document.getElementById("hideStaffBtn").style.display = "none";
+        document.getElementById("unlockMessage").textContent = "Staff tools hidden.";
     }
 </script>
 
