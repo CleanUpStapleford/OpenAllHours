@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Open All Hours — Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        font-family: "Georgia", serif;
+        background: #f4e7c1;
+        margin: 0;
+        padding: 0;
+        color: #3b2f1c;
+    }
+
+    header {
+        background: #b5651d;
+        color: #fff8e7;
+        padding: 1rem 1.5rem;
+        border-bottom: 6px solid #7a4a12;
+        box-shadow: 0 4px 0 #d9c49a inset;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 0 #7a4a12;
+    }
+
+    header p {
+        margin: 0.3rem 0 0;
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .section {
+        background: #fff8e7;
+        border: 3px solid #c9a46a;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+        margin-top: 0;
+        font-size: 1.4rem;
+        color: #7a4a12;
+        border-bottom: 2px solid #c9a46a;
+        padding-bottom: 0.3rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-box {
+        background: #fdf5e6;
+        border: 2px solid #c9a46a;
+        border-radius: 6px;
+        padding: 0.8rem;
+        text-align: center;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+
+    .stat-title {
+        font-size: 0.9rem;
+        color: #7a4a12;
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #3b2f1c;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+    }
+
+    th, td {
+        padding: 0.5rem;
+        border-bottom: 1px solid #d9c49a;
+    }
+
+    th {
+        background: #fdf5e6;
+        color: #7a4a12;
+        text-align: left;
+    }
+
+    .log-output {
+        font-size: 0.9rem;
+        background: #fdf5e6;
+        border-radius: 6px;
+        border: 2px solid #c9a46a;
+        padding: 0.5rem;
+        max-height: 200px;
+        overflow: auto;
+        white-space: pre-wrap;
+        margin-top: 1rem;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Open All Hours — Financial Dashboard</h1>
+    <p>Profit • Stock • Regulars • Reorder Pot • Trends</p>
+</header>
+
+<main>
+
+    <!-- PROFIT SUMMARY -->
+    <div class="section">
+        <h2>Profit Summary</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-title">Weekly Profit</div>
+                <div class="stat-value" id="weeklyProfit">£0.00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Monthly Profit</div>
+                <div class="stat-value" id="monthlyProfit">£0.00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Total Profit</div>
+                <div class="stat-value" id="totalProfit">£0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREDIT/DEBIT SUMMARY -->
+    <div class="section">
+        <h2>Regulars — Credit & Debit</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-title">Total Credit Owed</div>
+                <div class="stat-value" id="totalCredit">£0.00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Total Debit Owed</div>
+                <div class="stat-value" id="totalDebit">£0.00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Net Balance</div>
+                <div class="stat-value" id="netBalance">£0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REORDER POT -->
+    <div class="section">
+        <h2>Reorder Pot</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-title">Cost to Refill All Stock</div>
+                <div class="stat-value" id="refillAll">£0.00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Cost to Refill Low Stock</div>
+                <div class="stat-value" id="refillLow">£0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP SELLERS -->
+    <div class="section">
+        <h2>Top Selling Items</h2>
+        <table id="topSellersTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Sold</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- LOW STOCK -->
+    <div class="section">
+        <h2>Low Stock Alerts</h2>
+        <table id="lowStockTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="log-output" id="dashboardLog"></div>
+
+</main>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
