@@ -157,8 +157,8 @@ document.getElementById("completeOrderBtn").addEventListener("click", completeOr
 // SEND ORDER TO GITHUB ACTION
 // --------------------------------------
 async function sendOrderToGitHub(order) {
-    const repoOwner = "YOUR_GITHUB_USERNAME";
-    const repoName = "YOUR_REPO_NAME";
+    const repoOwner = "CleanUpStapleford";
+    const repoName = "OpenAllHours";
 
     const url = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
 
