@@ -173,7 +173,7 @@ async function sendOrderToGitHub(order) {
         method: "POST",
         headers: {
             "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer YOUR_GITHUB_PAT",
+            "Authorization": "Bearer ${POS_TOKEN}",
             "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
