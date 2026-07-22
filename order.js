@@ -152,3 +152,32 @@ function completeOrder() {
 // --------------------------------------
 document.getElementById("updateSummaryBtn").addEventListener("click", updateSummary);
 document.getElementById("completeOrderBtn").addEventListener("click", completeOrder);
+
+// --------------------------------------
+// SEND ORDER TO GITHUB ACTION
+// --------------------------------------
+async function sendOrderToGitHub(order) {
+    const repoOwner = "YOUR_GITHUB_USERNAME";
+    const repoName = "YOUR_REPO_NAME";
+
+    const url = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
+
+    const payload = {
+        event_type: "pos_order",
+        client_payload: {
+            order: JSON.stringify(order)
+        }
+    };
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Accept": "application/vnd.github+json",
+            "Authorization": "Bearer YOUR_GITHUB_PAT",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    return response.ok;
+}
