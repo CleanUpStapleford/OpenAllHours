@@ -1,0 +1,20 @@
+name: POS Dispatch Relay
+
+on:
+  repository_dispatch:
+    types: [pos_order_raw]
+
+jobs:
+  relay:
+    runs-on: ubuntu-latest
+    env:
+      POS_TOKEN: ${{ secrets.POS_TOKEN }}
+
+    steps:
+    - name: Trigger main POS workflow
+      run: |
+        curl -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $POS_TOKEN" \
+          -d "{\"event_type\": \"pos_order\", \"client_payload\": {\"order\": ${{ toJson(github.event.client_payload.order) }} }}" \
+          https://api.github.com/repos/${{ github.repository }}/dispatches
