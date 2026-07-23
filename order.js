@@ -2,6 +2,20 @@ async function sendOrderToGitHub(order) {
     const repoOwner = "CleanUpStapleford";
     const repoName = "OpenAllHours";
 
+async function sendOrderToGitHub(order) {
+    const response = await fetch("https://openallhours-relay.cleanupstapleford.workers.dev", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ order })
+    });
+
+    console.log("Relay status:", response.status);
+    return response.ok;
+}
+
+
     const url = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
 
     const payload = {
