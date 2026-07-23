@@ -13,7 +13,8 @@ async function sendOrderToGitHub(order) {
         method: "POST",
         headers: {
             "Accept": "application/vnd.github.everest-preview+json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${GITHUB_TOKEN}`
         },
         body: JSON.stringify(payload)
     });
